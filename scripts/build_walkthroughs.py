@@ -43,7 +43,7 @@ for project,shots in scenes.items():
         cap=stage/f'caption-{index}.txt';cap.write_text(caption,encoding='utf-8')
         clip=stage/f'{index:02}.mp4';clips.append(clip)
         vf=f"scale=1920:960:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:0:color=0x132e32,drawtext=font=Arial:textfile=caption-{index}.txt:fontcolor=white:fontsize=27:x=(w-tw)/2:y=995,drawtext=font=Arial:text='SYNTHETIC DEMO  |  SIMULATED PROVIDERS  |  ACTUAL APP CAPTURES':fontcolor=0xa7c4c0:fontsize=17:x=(w-tw)/2:y=1040"
-        vf=vf.replace('font=Arial','fontfile=font.ttf')
+        vf='crop=iw:min(ih\\,1080):0:0,'+vf.replace('font=Arial','fontfile=font.ttf')
         subprocess.run(['ffmpeg','-y','-loglevel','error','-loop','1','-i',str(ROOT/'projects'/project/'assets'/filename),'-vf',vf,'-t','12','-r','12','-c:v','libx264','-preset','fast','-crf','24','-pix_fmt','yuv420p',str(clip)],cwd=stage,check=True)
     concat=stage/'clips.txt';concat.write_text('\n'.join(f"file '{p.name}'" for p in clips),encoding='utf-8')
     target=ROOT/'projects'/project/'assets'/'walkthrough.mp4'

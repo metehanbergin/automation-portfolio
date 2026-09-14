@@ -18,6 +18,16 @@ Authoring date: 15 September 2026. All inputs and provider responses were synthe
 - StayOps: inspected EN/ES/TR source-based answers and emergency routing. Answered an unknown luggage question, approved a separate knowledge entry and verified a subsequent exact question was automatically answered within the same property scope.
 - TradeFlow: supplier failed three times, reached escalation, was released by the approver, dispatched on attempt four and completed invoicing/payment reconciliation under finance role. The original source key was retained.
 - Actual app screenshots were saved in each `projects/*/assets` directory. Videos are captioned sequences of these real app captures, not continuous screen recordings.
+- The public GitHub Pages gallery was opened in Chrome. A deployed MP4 reported 1920×1080, a 48-second duration, active playback and no video error; its rendered captioned frame was visually inspected.
+- StayOps was checked at a 390-pixel viewport; main content, metrics and chat bubbles stayed inside the viewport. Other dashboard observations were desktop checks; no broader mobile-device acceptance is implied.
+
+## Hosted verification
+
+- Public repository: https://github.com/metehanbergin/automation-portfolio
+- Public gallery: https://metehanbergin.github.io/automation-portfolio/
+- GitHub Actions passed the 59 tests on Linux as well as local Windows validation: https://github.com/metehanbergin/automation-portfolio/actions/runs/34910811127
+- Static-site deployment succeeded: https://github.com/metehanbergin/automation-portfolio/actions/runs/34910811052
+- A credential-pattern scan found no private-key blocks or common API/GitHub/AWS token patterns in tracked source. No `.env`, database, logs or private key files are tracked. Fictional Wi-Fi credentials are labeled in the demo knowledge.
 
 ## Not claimed
 

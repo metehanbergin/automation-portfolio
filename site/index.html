@@ -374,7 +374,7 @@
       document.querySelector("#projects").innerHTML = projects
         .map(
           ([id, name, title, desc, result, arch], i) =>
-            `<article class="card"><div class="card-head"><div class="eyebrow">0${i + 1} / ${title}</div><h2>${name}</h2><p>${desc}</p><p><strong>Synthetic demonstration:</strong> ${result}</p></div><img src="projects/${id}/assets/01-dashboard.png" alt="Actual ${name} dashboard with synthetic workflow data" data-image="${id}" loading="lazy"><footer><button class="button" data-video="${id}">Watch walkthrough ▷</button><a href="projects/${id}/CASE-STUDY.md">Read case study ↗</a></footer><div class="media-links" style="padding:0 27px"><a href="projects/${id}/assets/${arch}-architecture.png">Architecture</a><a href="https://github.com/metehanbergin/automation-portfolio/tree/main/projects/${id}">Code & demonstration script</a></div></article>`,
+            `<article class="card"><div class="card-head"><div class="eyebrow">0${i + 1} / ${title}</div><h2>${name}</h2><p>${desc}</p><p><strong>Synthetic demonstration:</strong> ${result}</p></div><img src="projects/${id}/assets/01-dashboard.png" alt="Actual ${name} dashboard with synthetic workflow data" data-image="${id}" loading="lazy"><footer><button class="button" data-video="${id}">Watch walkthrough ▷</button><a href="projects/${id}/case-study.html">Read case study ↗</a></footer><div class="media-links" style="padding:0 27px"><a href="projects/${id}/assets/${arch}-architecture.png">Architecture</a><a href="https://github.com/metehanbergin/automation-portfolio/tree/main/projects/${id}">Code & demonstration script</a></div></article>`,
         )
         .join("");
       function modal(id, type) {

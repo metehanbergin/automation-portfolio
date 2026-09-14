@@ -2,6 +2,8 @@
 
 Four independently demonstrable applications in one small FastAPI repository. Built as **self-initiated portfolio demonstrations**, with fictional organizations and synthetic data. No client work, revenue impact, production users or customer ROI is claimed.
 
+**Public gallery:** https://metehanbergin.github.io/automation-portfolio/ — actual screenshots, readable case studies and captioned walkthroughs. The interactive backend applications run locally using the instructions below.
+
 | Application | Buyer problem | Open locally |
 |---|---|---|
 | **LedgerFlow** | Remittance parsing, invoice matching and exception review | http://127.0.0.1:8765/remittance |
