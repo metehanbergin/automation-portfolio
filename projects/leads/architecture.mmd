@@ -1,0 +1,12 @@
+flowchart LR
+  A[Website inquiry] --> B[Normalize and deduplicate]
+  B --> C[Service / urgency / area qualification]
+  C --> D[Deterministic estimate]
+  D --> E[Human quote approval]
+  E --> F{Calendar slot free?}
+  F -->|yes| G[Book and confirm]
+  F -->|no| H[Choose another slot]
+  H --> F
+  G --> I[Reminder / job completion / review]
+  E --> J[No-response follow-up]
+  J --> K[Consent-based reactivation]

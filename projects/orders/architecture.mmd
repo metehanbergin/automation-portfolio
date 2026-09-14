@@ -1,0 +1,16 @@
+flowchart LR
+  A[Source order / idempotency key] --> B[Account price + quote approval]
+  B --> C[Inventory and fulfillment router]
+  C --> D[Warehouse / supplier / POD / manual]
+  D --> E{Provider result}
+  E -->|transient failure| F[Bounded backoff]
+  F --> D
+  E -->|threshold reached| G[Exception / severity / SLA]
+  G --> H[Authorized human resolution]
+  H --> D
+  E -->|success| I[Shipment and invoice]
+  I --> J[Payment / finance reconciliation]
+  J --> K[Complete]
+  L[(SQLite state + audit + receipts)] --- B
+  L --- G
+  L --- J

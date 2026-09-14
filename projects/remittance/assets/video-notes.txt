@@ -1,0 +1,2 @@
+Captioned walkthrough from actual application screenshots. Not a continuous screen recording.
+Duration: 48 seconds. No audio. Synthetic inputs and simulated external providers.

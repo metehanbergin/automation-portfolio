@@ -1,0 +1,5 @@
+Customer: Northline Studio
+Invoice: INV-1004
+Amount: 640.00
+Reference: BANK-UPLOAD-001
+Currency: USD

@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Four working Python and API automation portfolio demos: document reconciliation, CRM lifecycle, guest knowledge operations and order-to-cash recovery."
+    />
+    <title>Metehan Bergin | Automation Portfolio</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f4f6f5;
+        color: #203737;
+        font:
+          15px/1.65 "Segoe UI",
+          Arial,
+          sans-serif;
+      }
+      a {
+        color: inherit;
+      }
+      header,
+      main,
+      footer {
+        max-width: 1200px;
+        margin: auto;
+        padding: 30px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #dce5e1;
+        align-items: center;
+      }
+      header strong {
+        letter-spacing: -0.5px;
+        font-size: 20px;
+      }
+      header a {
+        font-size: 13px;
+        text-decoration: none;
+      }
+      .intro {
+        padding: 40px 0 30px;
+        max-width: 850px;
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: #168371;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      h1 {
+        font-size: clamp(35px, 5vw, 58px);
+        line-height: 1.12;
+        letter-spacing: -2px;
+        font-weight: 600;
+        margin: 17px 0 23px;
+      }
+      .intro p {
+        color: #657a77;
+        font-size: 17px;
+        max-width: 690px;
+      }
+      .notice {
+        font-size: 12px;
+        border: 1px solid #d9e6df;
+        background: #edf5f0;
+        padding: 17px 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid #dce5e1;
+        border-radius: 13px;
+        overflow: hidden;
+      }
+      .card-head {
+        padding: 27px 28px 20px;
+      }
+      .card h2 {
+        font-size: 26px;
+        letter-spacing: -0.7px;
+        margin: 8px 0;
+      }
+      .card p {
+        font-size: 14px;
+        color: #6b7e7c;
+        margin: 10px 0;
+      }
+      .card img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16/10;
+        object-fit: cover;
+        object-position: top;
+        border-top: 1px solid #e6ece9;
+        cursor: zoom-in;
+      }
+      .card footer {
+        padding: 19px 27px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+      }
+      .button {
+        background: #126d61;
+        color: white;
+        border: 0;
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font: inherit;
+        font-size: 12px;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .secondary {
+        background: #edf2ef;
+        color: #24483e;
+      }
+      .section {
+        background: white;
+        border: 1px solid #dce5e1;
+        border-radius: 12px;
+        padding: 30px;
+        margin-top: 28px;
+      }
+      .section h2 {
+        margin: 0;
+        font-size: 23px;
+      }
+      .section p {
+        font-size: 14px;
+        color: #657a77;
+      }
+      .tags {
+        font-size: 11px;
+        color: #667e76;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 23px;
+        margin: 20px 0;
+      }
+      .steps strong {
+        display: block;
+      }
+      .steps p {
+        font-size: 13px;
+      }
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: #102c2cce;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 25px;
+      }
+      .modal-box {
+        width: min(1180px, 100%);
+        background: #fff;
+        border-radius: 10px;
+        overflow: auto;
+        max-height: 94vh;
+      }
+      .modal-bar {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 20px;
+        align-items: center;
+      }
+      .modal video {
+        width: 100%;
+        display: block;
+        background: #132e32;
+      }
+      .modal img {
+        width: 100%;
+        display: block;
+      }
+      .modal p {
+        padding: 0 20px;
+        font-size: 12px;
+        color: #6b7e7c;
+      }
+      button:focus-visible,
+      a:focus-visible {
+        outline: 3px solid #e6b251;
+        outline-offset: 3px;
+      }
+      footer {
+        font-size: 12px;
+        color: #73847e;
+      }
+      code {
+        background: #f0f4f2;
+        padding: 3px 5px;
+      }
+      details {
+        margin: 16px 0;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 13px;
+      }
+      .case {
+        font-size: 13px;
+        white-space: pre-wrap;
+        line-height: 1.8;
+        color: #657a77;
+      }
+      .media-links {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        margin: 20px 0;
+      }
+      .media-links a {
+        color: #126d61;
+      }
+      @media (max-width: 700px) {
+        header,
+        main,
+        footer {
+          padding: 20px;
+        }
+        .grid,
+        .steps {
+          grid-template-columns: 1fr;
+        }
+        .intro {
+          padding-top: 25px;
+        }
+        header strong {
+          font-size: 17px;
+        }
+        .modal {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong
+        >Metehan Bergin <span style="color: #a3b3ac">/</span> Automation</strong
+      ><a href="https://github.com/metehanbergin/automation-portfolio"
+        >Source & setup ↗</a
+      >
+    </header>
+    <main>
+      <section class="intro">
+        <div class="eyebrow">Python · APIs · Reliable workflows</div>
+        <h1>Business automation,<br />with the whole workflow in view.</h1>
+        <p>
+          Four self-initiated systems that connect operational steps, surface
+          exceptions and keep a human in control of important decisions.
+        </p>
+      </section>
+      <div class="notice">
+        <strong>Working software. Truthful demonstrations.</strong> These are
+        synthetic portfolio projects, not client case studies. This gallery
+        hosts real app screenshots and captioned walkthroughs. The interactive
+        FastAPI applications run locally from the repository. External business
+        providers are simulated; no live customer results are claimed.
+      </div>
+      <div id="projects" class="grid"></div>
+      <section class="section">
+        <h2>What these demos demonstrate</h2>
+        <div class="steps">
+          <div>
+            <strong>01 / Complete processes</strong>
+            <p>
+              Intake, validation, state changes, review actions and a final
+              outcome. Each project addresses a different operational problem.
+            </p>
+          </div>
+          <div>
+            <strong>02 / Recoverable failures</strong>
+            <p>
+              Duplicate suppression, exception queues, safe retry limits and
+              recorded resolution evidence.
+            </p>
+          </div>
+          <div>
+            <strong>03 / Inspectable delivery</strong>
+            <p>
+              Readable source, reproducible setup, automated tests, documented
+              provider boundaries and exportable audit history.
+            </p>
+          </div>
+        </div>
+        <div class="tags">
+          Python · FastAPI · SQLite · REST APIs · PDF / XLSX / MIME parsing ·
+          Scoped knowledge retrieval · Optional OpenAI-compatible draft adapter
+        </div>
+      </section>
+      <section class="section">
+        <h2>Run the interactive applications</h2>
+        <p>
+          Clone the repository, install the Python dependencies and start
+          FastAPI. Every browser gets an isolated synthetic workspace. No paid
+          API account is needed for the default demos.
+        </p>
+        <a
+          class="button"
+          href="https://github.com/metehanbergin/automation-portfolio#run-locally"
+          >Open setup instructions ↗</a
+        >
+        <p>
+          The default demos use deterministic extraction, business rules and
+          local lexical retrieval. The optional model adapter is contract-tested
+          and disabled by default; live LLM inference is not claimed.
+        </p>
+      </section>
+    </main>
+    <footer>
+      Self-initiated portfolio work · Fictional organizations and data · No
+      testimonials, revenue claims or production usage metrics
+    </footer>
+    <script>
+      const projects = [
+        [
+          "remittance",
+          "LedgerFlow",
+          "Remittance matching & review",
+          "Parse payment documents, match invoices and route exceptions before posting.",
+          "10 synthetic documents: 2 auto-posted, 7 held, 1 duplicate blocked.",
+          "04",
+        ],
+        [
+          "leads",
+          "FieldFlow",
+          "Lead-to-booking operations",
+          "Qualify an inquiry, approve a quote, avoid calendar conflicts and keep the customer lifecycle moving.",
+          "A synthetic USD 295 quote progressed through a blocked slot to confirmed booking.",
+          "05",
+        ],
+        [
+          "guests",
+          "StayOps",
+          "Guarded guest knowledge operations",
+          "Retrieve the right property facts, escalate protected requests and learn only through separate human approval.",
+          "Known answer, emergency and approved-learning paths demonstrated in the UI.",
+          "05",
+        ],
+        [
+          "orders",
+          "TradeFlow",
+          "Order-to-cash control tower",
+          "Coordinate multiple fulfillment routes and recover from supplier failure without recreating the order.",
+          "Three failures, human-approved recovery, one dispatch and USD 2,240 reconciliation.",
+          "06",
+        ],
+      ];
+      document.querySelector("#projects").innerHTML = projects
+        .map(
+          ([id, name, title, desc, result, arch], i) =>
+            `<article class="card"><div class="card-head"><div class="eyebrow">0${i + 1} / ${title}</div><h2>${name}</h2><p>${desc}</p><p><strong>Synthetic demonstration:</strong> ${result}</p></div><img src="projects/${id}/assets/01-dashboard.png" alt="Actual ${name} dashboard with synthetic workflow data" data-image="${id}" loading="lazy"><footer><button class="button" data-video="${id}">Watch walkthrough ▷</button><a href="projects/${id}/CASE-STUDY.md">Read case study ↗</a></footer><div class="media-links" style="padding:0 27px"><a href="projects/${id}/assets/${arch}-architecture.png">Architecture</a><a href="https://github.com/metehanbergin/automation-portfolio/tree/main/projects/${id}">Code & demonstration script</a></div></article>`,
+        )
+        .join("");
+      function modal(id, type) {
+        let p = projects.find((p) => p[0] === id);
+        let m = document.createElement("div");
+        m.className = "modal";
+        m.innerHTML = `<section class="modal-box" role="dialog" aria-modal="true" aria-label="${p[1]} walkthrough"><div class="modal-bar"><strong>${p[1]} / ${p[2]}</strong><button class="button secondary" id="close">Close ×</button></div>${type === "video" ? `<video controls autoplay playsinline src="projects/${id}/assets/walkthrough.mp4"></video><p>Captioned sequence of actual app captures. Synthetic data and simulated providers. Not a continuous screen recording.</p>` : `<img src="projects/${id}/assets/01-dashboard.png" alt="${p[1]} full dashboard">`}</section>`;
+        document.body.append(m);
+        m.querySelector("#close").onclick = () => m.remove();
+        m.querySelector("#close").focus();
+        m.onclick = (e) => {
+          if (e.target === m) m.remove();
+        };
+      }
+      document
+        .querySelectorAll("[data-video]")
+        .forEach((b) => (b.onclick = () => modal(b.dataset.video, "video")));
+      document
+        .querySelectorAll("[data-image]")
+        .forEach((b) => (b.onclick = () => modal(b.dataset.image, "image")));
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") document.querySelector(".modal")?.remove();
+      });
+    </script>
+  </body>
+</html>

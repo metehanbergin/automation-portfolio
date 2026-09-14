@@ -1,0 +1,11 @@
+flowchart LR
+  A[Guest message] --> B[Language and reservation]
+  B --> C[Global + property-scoped retrieval]
+  C --> D{Policy and knowledge gate}
+  D -->|known| E[Approved answer + source]
+  D -->|unknown or protected| F[Host escalation]
+  D -->|emergency| G[Urgent alert + safe standby]
+  F --> H[Human answer]
+  H --> I[Sanitized knowledge proposal]
+  I --> J[Separate human approval]
+  J --> C

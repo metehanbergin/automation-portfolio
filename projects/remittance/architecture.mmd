@@ -1,0 +1,10 @@
+flowchart LR
+  A[Email or document] --> B[Text PDF / XLSX / CSV / MIME parser]
+  B --> C[Structured fields]
+  C --> D{Customer, invoice, reference and balance valid?}
+  D -->|yes| E[Atomic sandbox ledger posting]
+  D -->|no| F[Human review with evidence]
+  F --> E
+  E --> G[Audit history and notification receipt]
+  C --> H[Fingerprint and reference deduplication]
+  H -->|duplicate| I[Blocked without posting]
