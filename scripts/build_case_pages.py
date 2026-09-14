@@ -7,11 +7,23 @@ root=Path(__file__).resolve().parents[1]
 for project in ['remittance','leads','guests','orders']:
     source=(root/'projects'/project/'CASE-STUDY.md').read_text(encoding='utf-8')
     blocks=[]
-    for block in source.strip().split('\n\n'):
-        level=2 if block.startswith('## ') else 1 if block.startswith('# ') else 0
-        clean=html.escape(block[(level+1):] if level else block)
-        clean=re.sub(r'\*\*(.*?)\*\*',r'<strong>\1</strong>',clean)
-        blocks.append(f'<h{level}>{clean}</h{level}>' if level else f'<p>{clean}</p>')
+    paragraph=[]
+    def inline(text):
+        return re.sub(r'\*\*(.*?)\*\*',r'<strong>\1</strong>',html.escape(text))
+    def flush():
+        if paragraph:
+            blocks.append('<p>'+inline(' '.join(paragraph))+'</p>')
+            paragraph.clear()
+    for line in source.splitlines():
+        level=2 if line.startswith('## ') else 1 if line.startswith('# ') else 0
+        if level:
+            flush()
+            blocks.append(f'<h{level}>'+inline(line[level+1:])+f'</h{level}>')
+        elif not line.strip():
+            flush()
+        else:
+            paragraph.append(line)
+    flush()
     target=root/'site'/'projects'/project;target.mkdir(parents=True,exist_ok=True)
     title=html.escape(source.splitlines()[0][2:])
     output=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title><style>
