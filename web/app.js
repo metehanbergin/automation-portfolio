@@ -70,7 +70,8 @@ const money = (n) =>
   new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
   }).format((n || 0) / 100);
 const label = (s) =>
   String(s ?? "")

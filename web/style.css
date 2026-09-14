@@ -210,7 +210,6 @@ button:hover {
   min-width: 0;
 }
 .topbar {
-  height: seventy;
   min-height: 72px;
   background: white;
   border-bottom: 1px solid var(--line);
