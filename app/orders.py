@@ -1,5 +1,5 @@
 """Durable, resumable order-to-cash state machine with safe retries and role checks."""
-from .core import audit, notify, now, uid
+from .core import audit, notify, now, uid, whole_number
 
 ROLES={'operator','approver','finance','viewer'}
 
@@ -28,23 +28,23 @@ def exception(state,order,code,severity,detail,retryable=False):
 def create(state,data):
     book=state['orders']; key=data.get('key','').strip()
     if not key: raise ValueError('An idempotency key is required')
+    qty=whole_number(data.get('quantity',1),'Quantity',1,100)
+    price=whole_number(data['price'],'Source price in cents',0,100000000) if data.get('price') is not None else None
+    scenario=data.get('scenario','normal')
+    if scenario not in ['normal','supplier_failure','delayed','payment_mismatch','invoice_mismatch','manual']: raise ValueError('Unknown scenario')
+    source_payload=dict(account=data.get('account'),sku=data.get('sku'),quantity=qty,price=price,scenario=scenario)
     old=next((o for o in book['orders'] if o['key']==key),None)
     if old:
-        expected=(old['account'],old['sku'],old['quantity'],old.get('requested_price'))
-        incoming=(data.get('account'),data.get('sku'),int(data.get('quantity',1)),data.get('price'))
-        if incoming!=expected: raise ValueError('Idempotency key reused with a different order payload')
+        expected=old.get('source_payload',dict(account=old['account'],sku=old['sku'],quantity=old['quantity'],price=old.get('requested_price'),scenario=old['scenario']))
+        if source_payload!=expected: raise ValueError('Idempotency key reused with a different order payload')
         audit(state,'orders',old['id'],'Duplicate suppressed',f'Idempotency key {key}; returning original order')
         return old
     account=next((a for a in book['accounts'] if a['id']==data.get('account')),None)
     item=next((i for i in book['catalog'] if i['sku']==data.get('sku')),None)
     if not item: raise ValueError('Select a catalog item')
-    qty=int(data.get('quantity',1))
-    if not 1<=qty<=100: raise ValueError('Quantity must be between 1 and 100')
     unit=item['price']*(100-account['discount'])//100 if account else item['price']
-    scenario=data.get('scenario','normal')
-    if scenario not in ['normal','supplier_failure','delayed','payment_mismatch','invoice_mismatch','manual']: raise ValueError('Unknown scenario')
     o=dict(id=uid('ORD'),key=key,account=data.get('account'),customer=account['name'] if account else 'Unverified account',
-           sku=item['sku'],product=item['name'],quantity=qty,unit=unit,total=unit*qty,requested_price=data.get('price'),
+           sku=item['sku'],product=item['name'],quantity=qty,unit=unit,total=unit*qty,requested_price=price,source_payload=source_payload,
            route='manual' if scenario=='manual' else item['route'],scenario=scenario,status='quote_approval',
            attempts=0,next_retry=None,provider_ok=False,exception=None,created=now(),history=['received','account_checked','quote_prepared'],
            reserved=False,shipment=None,invoice=None,payment=None)
@@ -52,7 +52,7 @@ def create(state,data):
     audit(state,'orders',o['id'],'Order received',f'{key}; {qty} × {item["name"]}')
     if not account:
         o['status']='blocked';exception(state,o,'missing_customer','high','A verified business account is required')
-    elif data.get('price') is not None and int(data['price'])!=unit:
+    elif price is not None and price!=unit:
         o['status']='blocked';exception(state,o,'pricing_mismatch','high',f'Account price is {unit/100:.2f} USD; source price differs')
     else: audit(state,'orders',o['id'],'Quote prepared',f'Account discount applied; total {o["total"]/100:.2f} USD')
     return o

@@ -279,3 +279,59 @@ def test_seed_cases_coherent():
     assert sum(d['status']=='review' for d in s['remittance']['documents'])==7
     assert sum(d['status']=='duplicate' for d in s['remittance']['documents'])==1
     assert all(i['paid']<=i['total'] for i in s['remittance']['invoices'])
+
+
+def test_missing_customer_recovery_preserves_original_event_identity(state):
+    payload=dict(key='UNKNOWN-ACCOUNT',account='unverified',sku='DESK',quantity=2)
+    order=orders.create(state,payload)
+    assert order['status']=='blocked'
+    assert state['orders']['exceptions'][-1]['code']=='missing_customer'
+    assert not order['reserved'] and not order['shipment']
+    orders.action(state,order['id'],'resolve',{'account':'AC-101','note':'Verified account against source business record'},'approver')
+    assert order['status']=='quote_approval' and order['unit']==57600
+    finish(state,order)
+    assert order['status']=='completed'
+    assert orders.create(state,payload)['id']==order['id']
+    assert len(state['orders']['orders'])==1
+
+
+def test_source_price_mismatch_requires_resolution_then_quote_approval(state):
+    payload=dict(key='PRICE-ERROR',account='AC-101',sku='DESK',quantity=2,price=64000)
+    order=orders.create(state,payload)
+    assert order['status']=='blocked'
+    exception=state['orders']['exceptions'][-1]
+    assert exception['code']=='pricing_mismatch' and order['total']==115200
+    with pytest.raises(PermissionError):
+        orders.action(state,order['id'],'resolve',{'note':'Wrong role'},'operator')
+    orders.action(state,order['id'],'resolve',{'note':'Account contract confirms the 10% discount'},'approver')
+    assert order['status']=='quote_approval' and exception['status']=='resolved'
+    finish(state,order)
+    assert order['status']=='completed' and order['invoice']['total']==115200
+
+
+@pytest.mark.parametrize('value',[2.5,'2.5',True,'NaN','Infinity',101,0])
+def test_order_rejects_invalid_quantity_without_partial_state(state,value):
+    with pytest.raises(ValueError):
+        orders.create(state,dict(key='BAD-QTY',account='AC-101',sku='DESK',quantity=value))
+    assert not state['orders']['orders'] and state['orders']['inventory']['DESK']==18
+
+
+def test_changed_failure_scenario_is_not_an_idempotent_replay(state):
+    new_order(state)
+    with pytest.raises(ValueError):
+        orders.create(state,dict(key='ORDER-1',account='AC-101',sku='DESK',quantity=2,scenario='delayed'))
+
+
+def test_real_multipart_upload_and_cross_format_duplicate(client):
+    fields='Customer: Northline Studio\nInvoice: INV-1004\nAmount: 640.00\nReference: MULTIPART-001\nCurrency: USD'
+    pdf=io.BytesIO();page=canvas.Canvas(pdf)
+    for i,line in enumerate(fields.splitlines()):page.drawString(40,780-i*20,line)
+    page.save()
+    response=client.post('/api/remittance/upload',files={'file':('sample.pdf',pdf.getvalue(),'application/pdf')})
+    assert response.status_code==200 and response.json()['status']=='posted'
+    csv=b'Customer,Invoice,Amount,Reference,Currency\nNorthline Studio,INV-1004,640.00,MULTIPART-001,USD\n'
+    duplicate=client.post('/api/remittance/upload',files={'file':('same-payment.csv',csv,'text/csv')})
+    assert duplicate.status_code==200 and duplicate.json()['status']=='duplicate'
+    current=client.get('/api/state').json()['remittance']
+    assert next(i for i in current['invoices'] if i['id']=='INV-1004')['paid']==64000
+    assert len([p for p in current['postings'] if p['reference']=='MULTIPART-001'])==1

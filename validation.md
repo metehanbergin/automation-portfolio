@@ -4,11 +4,14 @@ Authoring date: 15 September 2026. All inputs and provider responses were synthe
 
 ## Automated
 
-- 59 pytest cases passed locally on Python 3.12, including the optional model adapter contract tests.
+- 70 pytest cases passed locally on Python 3.12, including the optional model adapter contract tests.
 - JavaScript syntax check passed with `node --check web/app.js`.
 - Actual text PDF, XLSX, CSV and MIME email attachments were parsed in tests.
 - SQLite concurrent duplicate intake produced one order identity across eight concurrent requests.
 - An interrupted transaction rolled back; committed state remained readable after database reinitialization.
+- Missing-customer recovery and pricing-mismatch resolution were tested through completion. Replaying an original source event after customer correction retains the same order identity.
+- Fractional, non-finite, boolean and out-of-range quantities are rejected instead of silently truncated.
+- The actual multipart upload endpoint accepted a generated PDF, posted its payment once and suppressed the same payment uploaded later as CSV.
 - Two deprecation warnings originate from the FastAPI/Starlette/httpx test stack. They do not indicate failed workflow assertions.
 
 ## Browser acceptance
@@ -25,7 +28,7 @@ Authoring date: 15 September 2026. All inputs and provider responses were synthe
 
 - Public repository: https://github.com/metehanbergin/automation-portfolio
 - Public gallery: https://metehanbergin.github.io/automation-portfolio/
-- GitHub Actions passed the 59 tests on Linux as well as local Windows validation: https://github.com/metehanbergin/automation-portfolio/actions/runs/34910811127
+- GitHub Actions passed the original 59-test suite on Linux: https://github.com/metehanbergin/automation-portfolio/actions/runs/34910811127. Current workflow results, including the expanded suite, are available at https://github.com/metehanbergin/automation-portfolio/actions/workflows/ci.yml.
 - Static-site deployment succeeded: https://github.com/metehanbergin/automation-portfolio/actions/runs/34910811052
 - A credential-pattern scan found no private-key blocks or common API/GitHub/AWS token patterns in tracked source. No `.env`, database, logs or private key files are tracked. Fictional Wi-Fi credentials are labeled in the demo knowledge.
 

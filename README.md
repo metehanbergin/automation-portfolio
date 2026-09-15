@@ -84,6 +84,8 @@ Interactive API documentation is at `/docs`; the dashboard initializes the sessi
 
 Send to `POST /api/orders/command`. Repeating the identical key/payload returns the same order. Changing the payload while reusing a key is rejected.
 
+Duplicate checks compare against the immutable original input, so replay remains safe after a reviewer corrects the working customer record. Quantities and source prices in cents must be whole numbers; fractional input is rejected without creating an order.
+
 ## Deployment
 
 The Dockerfile runs the same application as a non-root user. Mount a persistent volume at `/data` for SQLite.

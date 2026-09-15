@@ -7,8 +7,22 @@ import uuid
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
+from decimal import Decimal, InvalidOperation
 
 DB = Path(os.getenv('PORTFOLIO_DB', 'portfolio.db'))
+
+
+def whole_number(value, label, minimum, maximum):
+    """Reject fractional quantities instead of silently truncating source data."""
+    try:
+        number = Decimal(str(value))
+        if not number.is_finite() or number != number.to_integral_value():
+            raise ValueError()
+        if not minimum <= number <= maximum:
+            raise ValueError()
+        return int(number)
+    except (InvalidOperation, ValueError, TypeError):
+        raise ValueError(f'{label} must be a whole number between {minimum} and {maximum}')
 
 
 def now():

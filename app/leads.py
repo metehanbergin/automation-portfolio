@@ -1,6 +1,6 @@
 """Cleaning-service lifecycle. Scheduling and communications use local provider receipts."""
 import re
-from .core import audit, notify, now, uid
+from .core import audit, notify, now, uid, whole_number
 
 
 def initial():
@@ -19,8 +19,7 @@ def intake(state,data):
     service='Move-out clean' if any(t in message.lower() for t in ['move','moving','vacate']) else 'Recurring clean' if any(t in message.lower() for t in ['weekly','recurring','regular']) else 'Deep clean'
     urgent=any(t in message.lower() for t in ['today','tomorrow','urgent'])
     location=data.get('location','Central')
-    size=int(data.get('rooms',2))
-    if not 1<=size<=12: raise ValueError('Rooms must be between 1 and 12')
+    size=whole_number(data.get('rooms',2),'Rooms',1,12)
     quote=book['service_prices'][service]+max(size-2,0)*3500
     supported=location in ['Central','North','West']
     score=min(100,45+(20 if urgent else 0)+(20 if supported else 0)+(10 if size>=3 else 0))
